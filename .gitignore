@@ -1,0 +1,62 @@
+# ============================
+# 강의자료 / 과제 / 보고서 양식
+# (Git에 올리지 않음)
+# ============================
+강의자료/
+보고서양식/
+실습결과물/
+
+# Claude Code 설정
+.claude/
+Claude.md
+
+# ============================
+# Python
+# ============================
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+
+# 가상환경
+venv/
+env/
+.venv/
+.env
+
+# 환경변수 / 인증키 (절대 커밋 금지)
+*.env
+credentials.json
+service_account.json
+*_credentials.json
+
+# MLflow
+mlflow.db
+mlartifacts/
+mlruns/
+
+# 모델 artifact
+ml/artifacts/
+*.pkl
+*.joblib
+
+# 로그
+logs/
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# pytest
+.pytest_cache/
+htmlcov/
+.coverage
