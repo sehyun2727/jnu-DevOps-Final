@@ -9,3 +9,11 @@ timestamp,review_text,predicted_label,score,model_type,run_id,serving_model
 2026-06-19 14:24:39,앱이 자꾸 튕겨요. 업데이트 후부터 계속 오류가 납니다.,bug,0.77,rules,N/A,dummy
 2026-06-19 14:24:41,다크모드 기능을 추가해주세요. 밤에 너무 눈이 부셔요.,request,0.89,rules,N/A,dummy
 2026-06-19 14:24:43,정말 편하고 유용한 앱이에요. 속도도 빠르고 예뻐요!,praise,0.75,rules,N/A,dummy
+2026-06-19 14:26:43,앱이 자꾸 튕겨요,bug,0.71,rules,N/A,dummy
+2026-06-19 14:26:43,다크모드 기능을 추가해주세요,request,0.89,rules,N/A,dummy
+2026-06-19 14:26:43,정말 편하고 좋은 앱이에요,praise,0.75,rules,N/A,dummy
+2026-06-19 14:26:43,앱이 자꾸 꺼져요,bug,0.71,rules,N/A,dummy
+2026-06-19 14:27:42,앱이 자꾸 튕겨요...,bug,0.71,rules,N/A,dummy
+2026-06-19 14:28:19,앱이 자꾸 튕겨요...,bug,0.71,rules,N/A,dummy
+2026-06-19 14:28:24,정말 편하고 유용한 앱이에요...,praise,0.75,rules,N/A,dummy
+2026-06-19 14:43:43,다크모드 추가해주세요,request,0.83,rules,N/A,dummy
