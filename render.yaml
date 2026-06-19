@@ -9,10 +9,12 @@ services:
         value: rules
       - key: MLFLOW_TRACKING_URI
         sync: false          # Render 대시보드에서 직접 입력
+      - key: GOOGLE_SHEET_NAME
+        sync: false          # 스프레드시트 이름 (예: 앱리뷰분류기)
       - key: GOOGLE_SHEET_ID
-        sync: false
-      - key: GOOGLE_CREDENTIALS_FILE
-        value: credentials.json
+        sync: false          # 이름 대신 ID 사용 시
+      - key: GOOGLE_SERVICE_ACCOUNT_JSON
+        sync: false          # 서비스계정 JSON 한 줄 문자열
       - key: CANARY_ENABLED
         value: "false"
       - key: LOW_CONFIDENCE_THRESHOLD
