@@ -10,7 +10,7 @@ numpy==1.26.4
 pandas==2.2.3
 
 # MLflow
-mlflow==2.16.2
+mlflow==3.10.1
 
 # Google Sheets DB
 gspread==6.1.2
