@@ -48,14 +48,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Write Google credentials
-        env:
-          GOOGLE_CREDENTIALS_B64: ${{ secrets.GOOGLE_CREDENTIALS_B64 }}
-        run: |
-          if [ -n "$GOOGLE_CREDENTIALS_B64" ]; then
-            echo "$GOOGLE_CREDENTIALS_B64" | base64 -d > credentials.json
-          fi
-
       - name: Train & register model
         run: python -m ml.train
         env:

@@ -125,7 +125,7 @@ def train():
             # 모델 등록
             mlflow.sklearn.log_model(
                 pipeline,
-                name="model",
+                artifact_path="model",
                 registered_model_name=MODEL_NAME,
             )
 
