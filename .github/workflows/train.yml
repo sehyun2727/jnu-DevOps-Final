@@ -3,8 +3,6 @@ name: CI — Test & Train & Register
 on:
   push:
     branches: [main]
-    paths:
-      - 'app-review-classifier/**'
   workflow_dispatch:
 
 defaults:
