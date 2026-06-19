@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>앱 리뷰 자동 분류기</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+<div class="wrapper">
+
+  <!-- 헤더 -->
+  <header class="app-header">
+    <h1>📱 앱 리뷰 자동 분류기</h1>
+    <p>리뷰를 입력하면 AI가 🐛 버그 · 💡 요청 · 👍 칭찬으로 분류합니다</p>
+  </header>
+
+  <!-- 입력 카드 -->
+  <div class="card">
+    <textarea id="review-input" placeholder="앱 리뷰를 여기에 입력하세요...&#10;예) 앱이 자꾸 튕겨요 / 다크모드 추가해주세요 / 정말 편해요"></textarea>
+
+    <div class="example-row">
+      <span class="example-label">예시:</span>
+      <button class="ex-btn bug"    onclick="fillExample('bug')">🐛 버그 예시</button>
+      <button class="ex-btn req"    onclick="fillExample('request')">💡 요청 예시</button>
+      <button class="ex-btn praise" onclick="fillExample('praise')">👍 칭찬 예시</button>
+    </div>
+
+    <button class="classify-btn" id="classify-btn" onclick="classify()">분류하기 →</button>
+  </div>
+
+  <!-- 결과 카드 -->
+  <div class="card result-card hidden" id="result-card">
+
+    <!-- 배지 + Confidence -->
+    <div class="result-header">
+      <span class="badge" id="result-badge"></span>
+      <div class="confidence-block">
+        <div class="confidence-pct" id="confidence-pct"></div>
+        <div class="progress-track">
+          <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3-class 확률 막대 그래프 -->
+    <div class="prob-chart">
+      <h3>클래스별 확률</h3>
+      <div class="prob-row">
+        <span class="prob-label">🐛 버그</span>
+        <div class="bar-track"><div class="bar-fill bug"     id="bar-bug"     style="width:0%"></div></div>
+        <span class="prob-pct" id="pct-bug">0%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">💡 요청</span>
+        <div class="bar-track"><div class="bar-fill request" id="bar-request" style="width:0%"></div></div>
+        <span class="prob-pct" id="pct-request">0%</span>
+      </div>
+      <div class="prob-row">
+        <span class="prob-label">👍 칭찬</span>
+        <div class="bar-track"><div class="bar-fill praise"  id="bar-praise"  style="width:0%"></div></div>
+        <span class="prob-pct" id="pct-praise">0%</span>
+      </div>
+    </div>
+
+    <!-- 모델 정보 -->
+    <div class="model-info" id="model-info"></div>
+
+    <!-- 피드백 -->
+    <div class="feedback-section">
+      <p>분류 결과가 틀렸나요? 올바른 분류를 알려주세요.</p>
+      <div class="feedback-btns">
+        <button class="fb-btn" onclick="sendFeedback('bug')">🐛 버그신고</button>
+        <button class="fb-btn" onclick="sendFeedback('request')">💡 기능요청</button>
+        <button class="fb-btn" onclick="sendFeedback('praise')">👍 칭찬</button>
+      </div>
+      <p class="feedback-msg hidden" id="feedback-msg">✅ 피드백 감사합니다!</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  const EXAMPLES = {
+    bug:     '앱이 자꾸 튕겨요. 업데이트 후부터 계속 오류가 납니다.',
+    request: '다크모드 기능을 추가해주세요. 밤에 쓰기 너무 눈이 부셔요.',
+    praise:  '정말 편하고 유용한 앱이에요. 디자인도 너무 예쁘고 속도도 빨라요!',
+  };
+
+  let lastReview = '';
+  let lastPredicted = '';
+
+  function fillExample(type) {
+    document.getElementById('review-input').value = EXAMPLES[type];
+  }
+
+  async function classify() {
+    const text = document.getElementById('review-input').value.trim();
+    if (!text) { alert('리뷰를 입력해주세요.'); return; }
+
+    const btn = document.getElementById('classify-btn');
+    btn.disabled = true;
+    btn.textContent = '분류 중...';
+
+    try {
+      const res = await fetch('/classify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ text }),
+      });
+      const data = await res.json();
+
+      if (data.error) { alert(data.error); return; }
+
+      lastReview = text;
+      lastPredicted = data.label;
+      renderResult(data);
+    } catch (e) {
+      alert('서버 오류가 발생했습니다.');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = '분류하기 →';
+    }
+  }
+
+  function renderResult(data) {
+    const { label, label_ko, confidence, probabilities, model_info } = data;
+    const pct = Math.round(confidence * 100);
+
+    // 배지
+    const badge = document.getElementById('result-badge');
+    badge.textContent = label_ko;
+    badge.className = `badge ${label}`;
+
+    // Confidence
+    const confEl = document.getElementById('confidence-pct');
+    confEl.textContent = `${pct}%`;
+    confEl.className = `confidence-pct ${label}`;
+
+    const fill = document.getElementById('progress-fill');
+    fill.className = `progress-fill ${label}`;
+    setTimeout(() => { fill.style.width = `${pct}%`; }, 50);
+
+    // 확률 막대
+    ['bug', 'request', 'praise'].forEach(cls => {
+      const p = Math.round((probabilities[cls] || 0) * 100);
+      const bar = document.getElementById(`bar-${cls}`);
+      const pctEl = document.getElementById(`pct-${cls}`);
+      pctEl.textContent = `${p}%`;
+      setTimeout(() => { bar.style.width = `${p}%`; }, 50);
+    });
+
+    // 모델 정보
+    const info = model_info || {};
+    document.getElementById('model-info').innerHTML =
+      `<span>🤖 모델: ${info.model_type || '-'}</span>
+       <span>🏷️ 서빙: ${info.serving_model || '-'}</span>
+       <span>🔑 Run ID: ${info.run_id || '-'}</span>`;
+
+    // 피드백 초기화
+    document.getElementById('feedback-msg').classList.add('hidden');
+
+    // 카드 표시
+    const card = document.getElementById('result-card');
+    card.classList.remove('hidden');
+    card.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  async function sendFeedback(correctLabel) {
+    if (!lastReview) return;
+    try {
+      await fetch('/feedback', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          review_text: lastReview,
+          predicted_label: lastPredicted,
+          correct_label: correctLabel,
+        }),
+      });
+      const msg = document.getElementById('feedback-msg');
+      msg.classList.remove('hidden');
+    } catch (e) {
+      alert('피드백 전송 실패');
+    }
+  }
+</script>
+</body>
+</html>

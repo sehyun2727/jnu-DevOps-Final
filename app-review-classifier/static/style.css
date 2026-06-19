@@ -1,0 +1,242 @@
+/* ── 공통 변수 ── */
+:root {
+  --bug:     #ef4444;
+  --request: #3b82f6;
+  --praise:  #22c55e;
+  --bg:      #f1f5f9;
+  --card:    #ffffff;
+  --text:    #1e293b;
+  --muted:   #64748b;
+  --border:  #e2e8f0;
+  --radius:  16px;
+  --shadow:  0 4px 24px rgba(0,0,0,0.08);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ── 레이아웃 ── */
+.wrapper {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 40px 20px 80px;
+}
+
+/* ── 헤더 ── */
+.app-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+.app-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+.app-header p {
+  margin-top: 8px;
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+/* ── 카드 ── */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px;
+  margin-bottom: 20px;
+}
+
+/* ── 입력 영역 ── */
+textarea {
+  width: 100%;
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
+  min-height: 120px;
+  transition: border-color 0.2s;
+  color: var(--text);
+}
+textarea:focus { outline: none; border-color: #6366f1; }
+
+/* ── 예시 버튼 ── */
+.example-row {
+  display: flex;
+  gap: 8px;
+  margin-top: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+.example-label { font-size: 0.85rem; color: var(--muted); }
+.ex-btn {
+  border: none;
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  font-weight: 500;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.ex-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+.ex-btn.bug    { background: #fef2f2; color: var(--bug); }
+.ex-btn.req    { background: #eff6ff; color: var(--request); }
+.ex-btn.praise { background: #f0fdf4; color: var(--praise); }
+
+/* ── 분류 버튼 ── */
+.classify-btn {
+  width: 100%;
+  margin-top: 18px;
+  padding: 14px;
+  border: none;
+  border-radius: 10px;
+  background: linear-gradient(135deg, #6366f1, #3b82f6);
+  color: #fff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  font-family: inherit;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.1s;
+}
+.classify-btn:hover  { opacity: 0.9; transform: translateY(-1px); }
+.classify-btn:active { transform: translateY(0); }
+.classify-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+/* ── 결과 카드 ── */
+.result-card { animation: fadeIn 0.35s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+
+.result-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+/* ── 배지 ── */
+.badge {
+  font-size: 1.25rem;
+  font-weight: 700;
+  padding: 8px 20px;
+  border-radius: 30px;
+  white-space: nowrap;
+}
+.badge.bug     { background: #fef2f2; color: var(--bug);     border: 2px solid var(--bug); }
+.badge.request { background: #eff6ff; color: var(--request); border: 2px solid var(--request); }
+.badge.praise  { background: #f0fdf4; color: var(--praise);  border: 2px solid var(--praise); }
+
+/* ── Confidence ── */
+.confidence-block { flex: 1; min-width: 180px; }
+.confidence-pct {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.confidence-pct.bug     { color: var(--bug); }
+.confidence-pct.request { color: var(--request); }
+.confidence-pct.praise  { color: var(--praise); }
+
+.progress-track {
+  height: 8px;
+  background: var(--border);
+  border-radius: 99px;
+  margin-top: 8px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s cubic-bezier(.4,0,.2,1);
+}
+.progress-fill.bug     { background: var(--bug); }
+.progress-fill.request { background: var(--request); }
+.progress-fill.praise  { background: var(--praise); }
+
+/* ── 확률 막대 그래프 ── */
+.prob-chart { margin-bottom: 20px; }
+.prob-chart h3 {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 500;
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.prob-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+.prob-label { width: 72px; font-size: 0.9rem; flex-shrink: 0; }
+.bar-track {
+  flex: 1;
+  height: 10px;
+  background: var(--border);
+  border-radius: 99px;
+  overflow: hidden;
+}
+.bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 0.6s cubic-bezier(.4,0,.2,1);
+}
+.bar-fill.bug     { background: var(--bug); }
+.bar-fill.request { background: var(--request); }
+.bar-fill.praise  { background: var(--praise); }
+.prob-pct { width: 46px; text-align: right; font-size: 0.9rem; font-weight: 600; color: var(--muted); }
+
+/* ── 모델 정보 ── */
+.model-info {
+  background: #f8fafc;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 0.8rem;
+  color: var(--muted);
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+}
+.model-info span { display: flex; align-items: center; gap: 4px; }
+
+/* ── 피드백 ── */
+.feedback-section { border-top: 1px solid var(--border); padding-top: 18px; }
+.feedback-section > p { font-size: 0.9rem; color: var(--muted); margin-bottom: 10px; }
+.feedback-btns { display: flex; gap: 8px; flex-wrap: wrap; }
+.fb-btn {
+  border: 1px solid var(--border);
+  background: #fff;
+  border-radius: 20px;
+  padding: 6px 16px;
+  font-size: 0.85rem;
+  font-family: inherit;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+.fb-btn:hover { background: var(--bg); border-color: #94a3b8; }
+.feedback-msg { margin-top: 10px; font-size: 0.85rem; font-weight: 600; color: var(--praise); }
+
+/* ── 유틸 ── */
+.hidden { display: none; }
+
+/* ── 반응형 ── */
+@media (max-width: 480px) {
+  .app-header h1 { font-size: 1.5rem; }
+  .card { padding: 20px; }
+  .result-header { flex-direction: column; align-items: flex-start; gap: 12px; }
+  .confidence-pct { font-size: 1.6rem; }
+}

@@ -1,1 +1,2 @@
 timestamp,review_text,predicted_label,correct_label,is_correct
+2026-06-19 14:23:28,앱이 자꾸 튕겨요,bug,bug,True
