@@ -1,5 +1,6 @@
 import logging
 import sys
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request
 from fastapi.responses import HTMLResponse, JSONResponse
@@ -18,8 +19,25 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+
+# ── 앱 시작 시 ML 모델 로드 ────────────────────────────────────────────
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if config.MODEL_MODE == "ml":
+        logger.info("MODEL_MODE=ml → MLflow champion 모델 로드 시작")
+        from app import model_loader
+        model_loader.load_models()
+        if model_loader.is_loaded():
+            logger.info("ML 모델 로드 완료")
+        else:
+            logger.warning("ML 모델 로드 실패 — /classify 호출 시 오류 반환")
+    else:
+        logger.info("MODEL_MODE=rules → 키워드 더미 분류기 사용")
+    yield
+
+
 # ── FastAPI 앱 ─────────────────────────────────────────────────────────
-app = FastAPI(title="앱 리뷰 자동 분류기", version="1.0.0")
+app = FastAPI(title="앱 리뷰 자동 분류기", version="1.0.0", lifespan=lifespan)
 app.mount("/static", StaticFiles(directory="static"), name="static")
 templates = Jinja2Templates(directory="templates")
 
@@ -81,23 +99,34 @@ async def classify(req: ClassifyRequest):
     logger.info(f"[classify] 입력: {text[:60]!r}")
 
     try:
-        label, probs = _dummy_classify(text)
-        score = probs[label]
+        if config.MODEL_MODE == "ml":
+            from app import model_loader
+            label, probs, model_info = model_loader.classify(text)
+        else:
+            label, probs = _dummy_classify(text)
+            model_info = {
+                "model_type": "rules",
+                "run_id": "N/A",
+                "serving_model": "dummy",
+                "version": "N/A",
+            }
 
+        score = probs[label]
         result = {
             "label": label,
             "label_ko": config.LABEL_KO[label],
             "confidence": round(score, 4),
             "probabilities": probs,
-            "model_info": {
-                "model_type": "rules",
-                "run_id": "N/A",
-                "serving_model": "dummy",
-            },
+            "model_info": model_info,
         }
 
-        logger.info(f"[classify] 결과: {label} ({score:.2%})")
-        log_prediction(text, label, score, "rules", "N/A", "dummy")
+        logger.info(f"[classify] 결과: {label} ({score:.2%}) [{model_info['serving_model']}]")
+        log_prediction(
+            text, label, score,
+            model_info["model_type"],
+            model_info["run_id"],
+            model_info["serving_model"],
+        )
         return result
 
     except Exception as e:
