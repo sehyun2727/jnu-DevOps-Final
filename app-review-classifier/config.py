@@ -24,8 +24,12 @@ GH_TOKEN = os.getenv("GH_TOKEN", "")
 GH_REPO  = os.getenv("GH_REPO", "")   # 형식: "owner/repo"
 
 # Google Sheets
-GOOGLE_SHEET_ID          = os.getenv("GOOGLE_SHEET_ID", "")
-GOOGLE_CREDENTIALS_FILE  = os.getenv("GOOGLE_CREDENTIALS_FILE", "credentials.json")
+# 인증: 우선순위 1 = JSON 문자열 환경변수 (Render/CI), 우선순위 2 = credentials.json 파일 (로컬)
+GOOGLE_SERVICE_ACCOUNT_JSON = os.getenv("GOOGLE_SERVICE_ACCOUNT_JSON", "")
+GOOGLE_CREDENTIALS_FILE     = os.getenv("GOOGLE_CREDENTIALS_FILE", "credentials.json")
+# 시트 지정: GOOGLE_SHEET_NAME(이름) 또는 GOOGLE_SHEET_ID(ID) 중 하나 설정
+GOOGLE_SHEET_NAME           = os.getenv("GOOGLE_SHEET_NAME", "")   # 강의 방식 (이름으로 열기)
+GOOGLE_SHEET_ID             = os.getenv("GOOGLE_SHEET_ID", "")     # ID로 열기 (대체 방식)
 
 # 라벨
 LABELS = ["bug", "request", "praise"]

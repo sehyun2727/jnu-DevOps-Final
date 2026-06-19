@@ -17,3 +17,16 @@ timestamp,review_text,predicted_label,score,model_type,run_id,serving_model
 2026-06-19 14:28:19,앱이 자꾸 튕겨요...,bug,0.71,rules,N/A,dummy
 2026-06-19 14:28:24,정말 편하고 유용한 앱이에요...,praise,0.75,rules,N/A,dummy
 2026-06-19 14:43:43,다크모드 추가해주세요,request,0.83,rules,N/A,dummy
+2026-06-19 15:49:13,앱이 자꾸 튕겨요,bug,0.71,rules,N/A,dummy
+2026-06-19 15:49:13,다크모드 기능을 추가해주세요,request,0.89,rules,N/A,dummy
+2026-06-19 15:49:13,정말 편하고 좋은 앱이에요,praise,0.75,rules,N/A,dummy
+2026-06-19 15:49:13,앱이 자꾸 꺼져요,bug,0.71,rules,N/A,dummy
+2026-06-19 18:44:19,앱이 자꾸 튕겨요,bug,0.71,rules,N/A,dummy
+2026-06-19 18:44:19,다크모드 기능을 추가해주세요,request,0.89,rules,N/A,dummy
+2026-06-19 18:44:19,정말 편하고 좋은 앱이에요,praise,0.75,rules,N/A,dummy
+2026-06-19 18:44:19,앱이 자꾸 꺼져요,bug,0.71,rules,N/A,dummy
+2026-06-19 19:00:46,앱이 자꾸 튕겨요,bug,0.71,rules,N/A,dummy
+2026-06-19 19:00:46,다크모드 기능을 추가해주세요,request,0.89,rules,N/A,dummy
+2026-06-19 19:00:46,정말 편하고 좋은 앱이에요,praise,0.75,rules,N/A,dummy
+2026-06-19 19:00:46,앱이 자꾸 꺼져요,bug,0.71,rules,N/A,dummy
+2026-06-19 19:30:13,앱이 자꾸 튕겨요,bug,0.71,rules,N/A,dummy

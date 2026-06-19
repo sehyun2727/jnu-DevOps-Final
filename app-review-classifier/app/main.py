@@ -51,6 +51,8 @@ class FeedbackRequest(BaseModel):
     review_text: str
     predicted_label: str
     correct_label: str
+    score: float = 0.0
+    serving_model: str = "champion"
 
 
 # ── 더미 분류기 (PHASE 2에서 ML 모델로 교체) ───────────────────────────
@@ -143,7 +145,8 @@ async def feedback(req: FeedbackRequest):
         return JSONResponse({"error": "필수 필드 누락"}, status_code=422)
 
     try:
-        log_feedback(req.review_text, req.predicted_label, req.correct_label)
+        log_feedback(req.review_text, req.predicted_label, req.correct_label,
+                     score=req.score, serving_model=req.serving_model)
         logger.info(f"[feedback] predicted={req.predicted_label}, correct={req.correct_label}")
         return {"status": "ok", "message": "피드백 감사합니다!"}
     except Exception as e:
