@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: app-review-classifier
+    runtime: docker
+    rootDir: app-review-classifier
+    dockerfilePath: ./Dockerfile
+    envVars:
+      - key: MODEL_MODE
+        value: rules
+      - key: MLFLOW_TRACKING_URI
+        sync: false          # Render 대시보드에서 직접 입력
+      - key: GOOGLE_SHEET_ID
+        sync: false
+      - key: GOOGLE_CREDENTIALS_FILE
+        value: credentials.json
+      - key: CANARY_ENABLED
+        value: "false"
+      - key: LOW_CONFIDENCE_THRESHOLD
+        value: "0.65"
+      - key: LOW_CONFIDENCE_LIMIT
+        value: "5"
+      - key: GH_TOKEN
+        sync: false
+      - key: GH_REPO
+        sync: false

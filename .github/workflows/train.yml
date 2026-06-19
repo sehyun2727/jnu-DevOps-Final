@@ -1,0 +1,63 @@
+name: CI — Test & Train & Register
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'app-review-classifier/**'
+  workflow_dispatch:
+
+defaults:
+  run:
+    working-directory: app-review-classifier
+
+jobs:
+  # ── JOB 1: 테스트 ────────────────────────────────────────────
+  test:
+    name: Run pytest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: app-review-classifier/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest tests/ -v
+        env:
+          MODEL_MODE: rules
+
+  # ── JOB 2: 학습 & 모델 등록 (테스트 통과 시) ──────────────────
+  train:
+    name: Train & Register champion
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: pip
+          cache-dependency-path: app-review-classifier/requirements.txt
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Write Google credentials
+        if: ${{ secrets.GOOGLE_CREDENTIALS_B64 != '' }}
+        run: echo "${{ secrets.GOOGLE_CREDENTIALS_B64 }}" | base64 -d > credentials.json
+
+      - name: Train & register model
+        run: python -m ml.train
+        env:
+          MLFLOW_TRACKING_URI: ${{ secrets.MLFLOW_TRACKING_URI }}
+          GOOGLE_SHEET_ID: ${{ secrets.GOOGLE_SHEET_ID }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_REPO: ${{ github.repository }}

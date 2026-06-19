@@ -10,6 +10,7 @@ from pydantic import BaseModel
 
 import config
 from app.sheet_db import log_prediction, log_feedback
+from app.retrain_issue import check_and_trigger
 
 # ── 로깅 설정 ──────────────────────────────────────────────────────────
 logging.basicConfig(
@@ -127,6 +128,8 @@ async def classify(req: ClassifyRequest):
             model_info["run_id"],
             model_info["serving_model"],
         )
+        # drift 감지: 낮은 confidence가 반복되면 GitHub Issue 자동 생성
+        check_and_trigger(score)
         return result
 
     except Exception as e:
